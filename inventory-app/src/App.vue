@@ -1,5 +1,7 @@
 <script setup>
 import Inventory from './components/Inventory.vue'
+import Heroes from './components/Heroes.vue'
+
 import { ref, watchEffect, onMounted } from 'vue'
 
 
@@ -23,14 +25,13 @@ function inputPartyIdSubmit (){
   </div>
   <div class="flex-none">
     <button class="btn btn-square btn-ghost" onclick="my_modal_1.showModal()">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-    </button>
+      <i class="fa-solid fa-gear"></i>    </button>
   </div>
 </div>
 
   <div class="container max-w-xl mx-auto mt-4 p-2 ">
 
-    <Inventory/>
+    <Heroes/>
 
   </div>
 
@@ -39,7 +40,7 @@ function inputPartyIdSubmit (){
 <!--DIALOG-->
   <dialog id="my_modal_1" class="modal">
   <form method="dialog" class="modal-box">
-    <h3 class="font-bold text-lg">Settings</h3>  
+    <h3 class="font-bold text-lg">Settings <i class="fa-solid fa-gears"></i></h3>  
     
 
   <div class="join w-full my-2">

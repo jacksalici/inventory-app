@@ -5,16 +5,22 @@ import {Deta} from 'deta'
 
 
 const items = ref()
+const heroes = ref()
 
 const error = ref("")
 
-let deta;
+let deta, dbInventory, dbHero = null;
 
 
 watchEffect(async () => {
   try{
     deta = Deta(localStorage.DETA_API_KEY);
-    const dbInventory = deta.Base("inventory");
+    let id = ""
+    if (localStorage.DETA_PARTY_ID){
+      id = "-" + localStorage.DETA_PARTY_ID
+    }
+    dbInventory = deta.Base("inventory"+id);
+    dbHero = deta.Base("heroes"+id);
     let res = await dbInventory.fetch();
     items.value = res.items
     console.log(items.value)
@@ -24,11 +30,6 @@ watchEffect(async () => {
   }
 
 })
-
-
-function connect(){
-  
-}
 
 </script>
 
@@ -69,8 +70,7 @@ function connect(){
         <td>{{ item.thing }}</td>
         <td>0
         </td>
-        <td> <button class="btn btn-circle mr-2">+</button>
-          <button class="btn btn-circle">-</button></td>
+        <td> <button class="btn btn-sm mr-2"><i class="fa-solid fa-ellipsis"></i></button></td>
 
       </tr>
 

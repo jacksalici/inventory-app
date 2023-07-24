@@ -68,6 +68,6 @@ function inputPartyIdSubmit (){
 </footer>
 </div>
 
-<img src="/drawing.jpg" class="max-w-sm mix-blend-multiply bottom-0 right-2 absolute z-[-1] opacity-70"/>
+<img src="/drawing.jpg" class="max-w-sm mix-blend-multiply right-2 bottom-12 absolute z-[-1] opacity-70"/>
 
 </template>

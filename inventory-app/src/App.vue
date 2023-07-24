@@ -16,6 +16,7 @@ function inputPartyIdSubmit (){
 </script>
 
 <template>
+  <div class="flex flex-col justify-between min-h-screen">
   <div class="navbar bg-base-200">
   <div class="flex-1">
     <a class="btn btn-ghost normal-case text-xl" href="/">The Inventory App</a>
@@ -57,4 +58,15 @@ function inputPartyIdSubmit (){
     </div>
   </form>
 </dialog>
+
+
+<footer class="footer footer-center p-4 mt-auto bg-base-200 text-base-content">
+  <div>
+    <p> © 2023 - Developed by <a class="link">jacksalici</a>, illustration by <a class="link" href="https://www.instagram.com/michelegalavotti/">Mich</a>. </p>
+  </div>
+</footer>
+</div>
+
+<img src="/drawing.jpg" class="max-w-sm mix-blend-multiply bottom-0 right-2 absolute z-[-1] opacity-70"/>
+
 </template>

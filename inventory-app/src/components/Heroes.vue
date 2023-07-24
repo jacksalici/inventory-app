@@ -11,12 +11,30 @@ const error = ref("");
 let deta,
   dbHero = null;
 
+async function createHero(){
+     await dbHero.put(
+        {
+            name: newHero.value.name,
+            details: newHero.value.details,
+            equipment: newHero.value.equipment,
+            avatar: getAvatar()
+        },
+        newHero.value.nick.trim()
+     )
+     fetchItem()
+}
 
-function avatar() {
+function getAvatar() {
     if (newHero.value.avatar)
         return newHero.value.avatar
     else 
     return 'https://api.dicebear.com/6.x/adventurer/svg?backgroundColor=b6e3f4&seed=' + newHero.value.nick
+}
+
+async function fetchItem(){
+    let res = await dbHero.fetch();
+    items.value = res.items;
+    console.log(items.value);
 }
 
 watchEffect(async () => {
@@ -27,9 +45,7 @@ watchEffect(async () => {
       id = "-" + localStorage.DETA_PARTY_ID;
     }
     dbHero = deta.Base("heroes" + id);
-    let res = await dbHero.fetch();
-    items.value = res.items;
-    console.log(items.value);
+    fetchItem()
   } catch (e) {
     error.value = "Please check the API key in the menu options.";
     console.error(e);
@@ -53,39 +69,34 @@ watchEffect(async () => {
 
       <tbody>
         <tr v-for="(item, index) in items">
-          <th>
-            <label>
-              <input type="checkbox" class="checkbox" />
-            </label>
-          </th>
+ 
           <td>
             <div class="flex items-center space-x-3">
               <div class="avatar">
-                <div class="mask mask-squircle w-12 h-12">
-                  <img src="{{item.photo}}" alt="Avatar" />
+                <div class="mask mask-squircle w-20 h-20">
+                  <img v-bind:src="item.avatar" alt="Avatar" />
                 </div>
               </div>
               <div>
-                <div class="font-bold">{{ item.nickname }}</div>
-                <div class="text-sm opacity-50">Russia</div>
+                <div class="font-mono italic text-xs opacity-50">{{ item.key }}</div>
+                <div class="font-bold">{{ item.name }}</div>
+                <div class="text-sm opacity-50">{{ item.details }}</div>
               </div>
             </div>
           </td>
           <td>
-            Rowe-Schoen
-            <br />
-            <span class="badge badge-ghost badge-sm">Office Assistant I</span>
+            <p class="text-sm">{{item.equipment}}</p>
+            
           </td>
-          <td>Crimson</td>
           <th>
-            <button class="btn btn-ghost btn-xs">details</button>
+            <a class="btn btn-ghost "><i class="fa-solid fa-ellipsis"></i></a>
           </th>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="collapse collapse-open bg-base-200">
+  <div class="collapse mt-20 bg-base-200">
     <input type="checkbox" />
     <div class="collapse-title text-xl font-medium">Add a new hero 🦸🦹</div>
     <div class="collapse-content space-y-2">
@@ -94,6 +105,7 @@ watchEffect(async () => {
         v-model="newHero.nick"
         placeholder="Nickname (unique for the party)"
         class="input input-bordered w-full"
+        @input="newHero.nick=$event.target.value.toLowerCase()"
       />
       <input
         type="text"
@@ -123,11 +135,11 @@ watchEffect(async () => {
         <div class="avatar">
           <div class="w-24 mask mask-squircle">
             <img
-              v-bind:src="avatar()"
+              v-bind:src="getAvatar()"
             />
           </div>
         </div>
-        <button class="btn btn-wide btn-primary">
+        <button class="btn btn-wide btn-primary" v-on:click="createHero()">
           Create {{ newHero.nick }}
         </button>
       </div>

@@ -6,7 +6,16 @@ module.exports = {
   ],
   theme: {},
   daisyui: {
-    themes: ["cupcake"],
+    themes: [{
+      inventory: {
+        ...require("daisyui/src/theming/themes")["[data-theme=garden]"],
+        "primary": "#345665" 
+      }
+
+
+    }],
+
+
   },
 }
 

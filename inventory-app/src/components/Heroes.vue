@@ -5,36 +5,65 @@ import { Deta } from "deta";
 const items = ref();
 const heroes = ref();
 const newHero = ref({});
+const editHeroOption = ref(false);
+const editHeroSubmit = ref(false);
 
 const error = ref("");
 
 let deta,
   dbHero = null;
 
-async function createHero(){
-     await dbHero.put(
-        {
-            name: newHero.value.name,
-            details: newHero.value.details,
-            equipment: newHero.value.equipment,
-            avatar: getAvatar()
-        },
-        newHero.value.nick.trim()
-     )
-     fetchItem()
+async function createHero() {
+  await dbHero.put(
+    {
+      name: newHero.value.name,
+      details: newHero.value.details,
+      equipment: newHero.value.equipment,
+      avatar: getAvatar(),
+    },
+    newHero.value.nick.trim()
+  );
+  fetchItem();
+  newHero.value = {};
 }
 
 function getAvatar() {
-    if (newHero.value.avatar)
-        return newHero.value.avatar
-    else 
-    return 'https://api.dicebear.com/6.x/adventurer/svg?backgroundColor=b6e3f4&seed=' + newHero.value.nick
+  if (newHero.value.avatar) return newHero.value.avatar;
+  else
+    return (
+      "https://api.dicebear.com/6.x/adventurer/svg?backgroundColor=b6e3f4&seed=" +
+      newHero.value.nick
+    );
 }
 
-async function fetchItem(){
-    let res = await dbHero.fetch();
-    items.value = res.items;
-    console.log(items.value);
+async function fetchItem() {
+  let res = await dbHero.fetch();
+  items.value = res.items;
+  console.log(items.value);
+}
+
+function fillHero(fill = true) {
+  if (fill) {
+    items.value.forEach((element) => {
+      if (newHero.value.nick == element.key) {
+        newHero.value.avatar = element.avatar;
+        newHero.value.name = element.name;
+        newHero.value.equipment = element.equipment;
+        newHero.value.details = element.details;
+
+        editHeroSubmit.value = true;
+      }
+    });
+  }
+  else{
+    //clear fields
+    newHero.value.avatar = "";
+    newHero.value.name = "";
+    newHero.value.equipment = "";
+    newHero.value.details = "";
+
+    editHeroSubmit.value = false;
+  }
 }
 
 watchEffect(async () => {
@@ -45,7 +74,7 @@ watchEffect(async () => {
       id = "-" + localStorage.DETA_PARTY_ID;
     }
     dbHero = deta.Base("heroes" + id);
-    fetchItem()
+    fetchItem();
   } catch (e) {
     error.value = "Please check the API key in the menu options.";
     console.error(e);
@@ -54,6 +83,16 @@ watchEffect(async () => {
 </script>
 
 <template>
+  <div
+    class="hero rounded-lg bg-base-200"
+    style="background-image: url(/drawing.jpg); background-position: 0px -120px"
+  >
+    <div class="hero-overlay rounded-lg bg-opacity-60"></div>
+    <div class="hero-content flex-col text-center text-base-100">
+      <h1 class="my-4 text-3xl font-bold">The Inventory App</h1>
+    </div>
+  </div>
+
   <div v-if="error">
     <div class="alert alert-warning">
       <span>{{ error }}</span>
@@ -69,7 +108,6 @@ watchEffect(async () => {
 
       <tbody>
         <tr v-for="(item, index) in items">
- 
           <td>
             <div class="flex items-center space-x-3">
               <div class="avatar">
@@ -78,18 +116,21 @@ watchEffect(async () => {
                 </div>
               </div>
               <div>
-                <div class="font-mono italic text-xs opacity-50">{{ item.key }}</div>
+                <div class="font-mono italic text-xs opacity-50">
+                  {{ item.key }}
+                </div>
                 <div class="font-bold">{{ item.name }}</div>
                 <div class="text-sm opacity-50">{{ item.details }}</div>
               </div>
             </div>
           </td>
           <td>
-            <p class="text-sm">{{item.equipment}}</p>
-            
+            <p class="text-sm">{{ item.equipment }}</p>
           </td>
           <th>
-            <a class="btn btn-ghost "><i class="fa-solid fa-ellipsis"></i></a>
+            <a class="btn btn-ghost"
+              ><i class="fa-solid fa-pen-to-square"></i
+            ></a>
           </th>
         </tr>
       </tbody>
@@ -98,15 +139,42 @@ watchEffect(async () => {
 
   <div class="collapse mt-20 bg-base-200">
     <input type="checkbox" />
-    <div class="collapse-title text-xl font-medium">Add a new hero 🦸🦹</div>
+    <div class="collapse-title text-xl font-medium">Add/edit a hero 🦸🦹</div>
     <div class="collapse-content space-y-2">
       <input
         type="text"
         v-model="newHero.nick"
         placeholder="Nickname (unique for the party)"
         class="input input-bordered w-full"
-        @input="newHero.nick=$event.target.value.toLowerCase()"
+        v-on:input="newHero.nick = $event.target.value.toLowerCase().trim()"
+        :class="{'!bg-base-300': editHeroSubmit}"
+        :disabled="editHeroSubmit"
+        
       />
+
+
+      <div class="flex space-x-2">
+        <button
+        v-if="items?.some((e) => e.key == newHero.nick)"
+        v-on:click="fillHero"
+        class="btn btn-sm btn-outline"
+        :disabled="editHeroSubmit"
+      >
+        Edit {{ newHero.nick }}
+      </button>
+
+      <span v-if="items?.some((e) => e.key == newHero.nick) && !editHeroSubmit" class="my-auto text-error">Nickname must be unique!</span>
+
+      <button
+        v-if="editHeroSubmit"
+        v-on:click="fillHero(false)"
+        class="btn btn-sm btn-outline"
+      >
+        Cancel
+      </button>
+
+      </div>
+
       <input
         type="text"
         v-model="newHero.name"
@@ -134,13 +202,12 @@ watchEffect(async () => {
       <div class="flex justify-between items-center">
         <div class="avatar">
           <div class="w-24 mask mask-squircle">
-            <img
-              v-bind:src="getAvatar()"
-            />
+            <img v-bind:src="getAvatar()" />
           </div>
         </div>
-        <button class="btn btn-wide btn-primary" v-on:click="createHero()">
-          Create {{ newHero.nick }}
+        <button class="btn btn-wide btn-primary" v-on:click="createHero()" :disabled="items?.some((e) => e.key == newHero.nick) && !editHeroSubmit">
+          <span v-if="!editHeroSubmit">Create {{ newHero.nick }}</span
+          ><span v-else>Edit {{ newHero.nick }}</span>
         </button>
       </div>
     </div>

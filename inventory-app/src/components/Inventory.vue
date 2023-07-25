@@ -41,10 +41,17 @@ async function addNewItem() {
 
 function initTempItem(index) {
   tempItem.value = Object.assign({}, items.value[index]);
+  fetchInventory();
+
 }
 
 async function editItem() {
-  dbInventory.put(tempItem.value);
+  await dbInventory.put(tempItem.value);
+  fetchInventory();
+}
+
+async function deleteItem() {
+  await dbInventory.delete(tempItem.value.key);
   fetchInventory();
 }
 
@@ -132,9 +139,10 @@ watchEffect(async () => {
 
   <dialog v-for="(item, index) in items" :id="'modal' + item.key" class="modal">
     <form method="dialog" class="modal-box">
-      <h3 class="font-bold text-lg">Item #{{ item.key }}</h3>
+      <h3 class="font-bold text-lg pb-4">Edit Item <span class="font-mono font-normal text-sm opacity-50">
+          ({{ item.key }})
+        </span></h3>
 
-      <div class="w-full my-3 bg-opacity-50">
         <label class="label">
           <span class="label-text">Item Description</span>
         </label>
@@ -144,47 +152,53 @@ watchEffect(async () => {
           v-model="tempItem.object"
         />
         <label class="label">
-          <span class="label-text">Item details</span>
+          <span class="label-text">Item Details</span>
         </label>
         <input
           class="input bg-opacity-50 input-bordered join-item w-full"
           placeholder="Details"
           v-model="tempItem.details"
         />
-        <label class="label">
+       
+
+        <div class="flex space-x-3 w-full">
+          <div><label class="label">
           <span class="label-text">Item Quantity</span>
         </label>
         <input
           class="input bg-opacity-50 input-bordered join-item w-full"
           placeholder="Quantity"
           v-model="tempItem.quantity"
-        />
-        <label class="label">
+        /></div>
+        <div><label class="label">
           <span class="label-text">Item Value</span>
         </label>
         <input
           class="input bg-opacity-50 input-bordered join-item w-full"
           placeholder="Value"
           v-model="tempItem.value"
-        />
-        <div class="form-control">
+        /></div>
+        </div>
+      
+      <div class="form-control w-32 mt-4">
           <label class="label cursor-pointer">
             <span class="label-text">Used</span>
             <input type="checkbox" class="toggle" v-model="tempItem.used" />
           </label>
         </div>
-      </div>
 
       <div class="modal-action">
-        <button class="btn">Back</button>
-        <button class="btn btn-primary" @click="editItem()">Save</button>
+        <button class="btn btn-error btn-outline my-auto mr-auto" @click="deleteItem()">Del</button>
+        <button class="btn border-base-300">Back</button>
+        <button class="btn btn-primary border-primary-focus" @click="editItem()">Save</button>
       </div>
+     
     </form>
   </dialog>
 
   <!--ADD NEW ITEM-->
 
-  <div class="max-w-sm mx-auto">
+  <div class="max-w-sm mx-auto p-4 sm:px-0">
     <div class="join join-vertical">
       <div class="bg-opacity-50 join join-horizontal w-full">
         <input

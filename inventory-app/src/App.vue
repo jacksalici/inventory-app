@@ -19,7 +19,7 @@ function inputPartyIdSubmit() {
 
 <img
     src="/drawing.jpg"
-    class="max-w-sm mix-blend-multiply bottom-0 right-0 fixed z-[-1] opacity-20"
+    class="max-w-sm mix-blend-multiply bottom-16 right-0 fixed z-[-1] opacity-20"
   />
 
 

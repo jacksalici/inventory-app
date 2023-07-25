@@ -11,14 +11,14 @@ The app relies on [***Deta* Collections**](https://deta.space/docs/en/use/your-d
 - ***HEROES-PARTY_ID***  
     It contains the info about the characters.
 
-    | Nickname (KEY) | Name | Details |  Equipment | Photo |
+    | key (nickname) | name | details |  equipment | avatar |
     |-|-|-|-|-|
 
 - ***INVENTORY-PARTY_ID***  
     It contains the info about the characters' equipment.
 
-    | id (KEY) | Object | Details | Quantity | Used |
-    |-|-|-|-|-|
+    | key (id) |object | details | quantity | value | used |
+    |-|-|-|-|-|-|
 
 ## Usage
 
@@ -28,10 +28,12 @@ Since my goal was to create something simple and free both for users and myself,
 - Create a new [collection](https://deta.space/docs/en/use/your-data/collections).  
 - Get an API key for the newly created collection.
 
-That's it! The very first time that you and your party visit the website, you will need to enter the key and you will be ready to go!   You can also set a party id that lets you have more inventories in the same collection. Note that just one person in the party has to do this procedure, then all people in the party share the same key and id.
+That's it! The very first time that you and your party visit the website, you will need to enter the key and then you will be ready to go!  
+
+You can also set a **party id that lets you have more inventories** in the same collection. Note that just one person in the party has to do this procedure, then all people in the party share the same key and id.
 
 ### Security concerns
 
-1. All the people you share a collection API key with can change/delete/see the data in that collection.
-2. **The API key is saved unencrypted in the local storage of your device. This is generally not a good idea** but seeing the informal and playful target of this app, I've done it anyway.
+1. Anyone you share a collection API key with can see/change/delete the data in that collection.
+2. **The API key is saved unencrypted in the local storage of your device. This is never a good idea** but seeing the informal and playful target of this app, I've done it anyway.
   

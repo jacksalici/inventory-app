@@ -229,7 +229,7 @@ watchEffect(async () => {
           class="btn join-item border-base-300 !rounded-tr-none"
           v-on:click="addNewItem()"
         >
-          ADD
+          ADD ITEM
         </button>
       </div>
     </div>

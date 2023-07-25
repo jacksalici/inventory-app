@@ -23,7 +23,7 @@ function inputPartyIdSubmit() {
   />
 
 
-  <div class="flex flex-col justify-between min-h-screen">
+  <div class="flex flex-col min-h-screen ">
     <div class="navbar bg-base-200">
       <div class="flex-1">
         <a class="btn btn-ghost normal-case text-xl" href="/"
@@ -40,12 +40,27 @@ function inputPartyIdSubmit() {
       </div>
     </div>
 
-    <div class="container max-w-xl mx-auto mt-4 mb-20 p-2">
+    <div class="container max-w-xl mb-auto mx-auto self-stretch p-2">
       <router-view />
     </div>
 
-    <!--DIALOG-->
-    <dialog id="menu_modal" class="modal">
+    <footer
+      class="footer footer-center p-4 bg-base-200 text-base-content"
+    >
+      <div>
+        <p>
+          © 2023 - Developed by <a class="link">jacksalici</a>, illustration by
+          <a class="link" href="https://www.instagram.com/michelegalavotti/"
+            >Mich</a
+          >.
+        </p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!--DIALOG-->
+  <dialog id="menu_modal" class="modal">
       <form method="dialog" class="modal-box">
         <h3 class="font-bold text-lg">
           Settings <i class="fa-solid fa-gears"></i>
@@ -75,21 +90,5 @@ function inputPartyIdSubmit() {
         </div>
       </form>
     </dialog>
-
-    <footer
-      class="footer footer-center p-4 mt-auto bg-base-200 text-base-content"
-    >
-      <div>
-        <p>
-          © 2023 - Developed by <a class="link">jacksalici</a>, illustration by
-          <a class="link" href="https://www.instagram.com/michelegalavotti/"
-            >Mich</a
-          >.
-        </p>
-      </div>
-    </footer>
-
-  </div>
-
   
 </template>

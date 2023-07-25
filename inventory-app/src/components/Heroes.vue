@@ -100,19 +100,15 @@ watchEffect(async () => {
     </div>
   </div>
   
-  <div v-else>
+  <div v-else class="flex flex-col h-full justify-between ">
     <div class="overflow-x-auto mt-8">
-      <table class="table text-lg">
-        <thead>
-          <tr></tr>
-        </thead>
-
+      <table class="table md:text-lg">
         <tbody>
           <tr v-for="(item, index) in items">
-            <td>
+            <td class="px-1">
               <div class="flex items-center space-x-3">
                 <div class="avatar">
-                  <div class="mask mask-squircle w-20 h-20">
+                  <div class="mask mask-squircle w-10 h-10">
                     <img v-bind:src="item.avatar" alt="Avatar" />
                   </div>
                 </div>
@@ -125,21 +121,21 @@ watchEffect(async () => {
                 </div>
               </div>
             </td>
-            <td>
+            <td class="px-1 md:px-4">
               <p class="text-sm">{{ item.equipment }}</p>
             </td>
-            <th>
-              <a class="btn btn-ghost"
+            <td class="px-1">
+              <a class="btn btn-sm border-base-300" :href="'/'+ item.key "
                 ><i class="fa-solid fa-pen-to-square"></i
               ></a>
-            </th>
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
     <div
-      class="collapse mt-20 bg-base-200 collapse-arrow border border-base-300"
+      class="collapse mt-4 bg-opacity-50 bg-base-200 collapse-arrow border border-base-300"
     >
       <input type="checkbox" />
       <div class="collapse-title text-xl font-medium">Add/edit a hero 🦸🦹</div>

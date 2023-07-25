@@ -82,6 +82,7 @@ watchEffect(async () => {
 </script>
 
 <template>
+  <!--TITLE-->
   <div
     class="hero rounded-xl bg-base-200 mt-2"
     style="background-image: url(/drawing.jpg); background-position: 0px -120px"
@@ -92,136 +93,141 @@ watchEffect(async () => {
     </div>
   </div>
 
-  <div v-if="error">
+  <div class="mt-8" v-if="error">
     <div class="alert alert-warning">
       <span>{{ error }}</span>
       <a class="btn btn-outline" href="/">RELOAD PAGE</a>
     </div>
   </div>
+  
+  <div v-else>
+    <div class="overflow-x-auto mt-8">
+      <table class="table text-lg">
+        <thead>
+          <tr></tr>
+        </thead>
 
-  <div v-else class="overflow-x-auto mt-8">
-    <table class="table text-lg">
-      <thead>
-        <tr></tr>
-      </thead>
-
-      <tbody>
-        <tr v-for="(item, index) in items">
-          <td>
-            <div class="flex items-center space-x-3">
-              <div class="avatar">
-                <div class="mask mask-squircle w-20 h-20">
-                  <img v-bind:src="item.avatar" alt="Avatar" />
+        <tbody>
+          <tr v-for="(item, index) in items">
+            <td>
+              <div class="flex items-center space-x-3">
+                <div class="avatar">
+                  <div class="mask mask-squircle w-20 h-20">
+                    <img v-bind:src="item.avatar" alt="Avatar" />
+                  </div>
+                </div>
+                <div>
+                  <div class="font-mono italic text-xs opacity-50">
+                    {{ item.key }}
+                  </div>
+                  <div class="font-bold">{{ item.name }}</div>
+                  <div class="text-sm opacity-50">{{ item.details }}</div>
                 </div>
               </div>
-              <div>
-                <div class="font-mono italic text-xs opacity-50">
-                  {{ item.key }}
-                </div>
-                <div class="font-bold">{{ item.name }}</div>
-                <div class="text-sm opacity-50">{{ item.details }}</div>
-              </div>
+            </td>
+            <td>
+              <p class="text-sm">{{ item.equipment }}</p>
+            </td>
+            <th>
+              <a class="btn btn-ghost"
+                ><i class="fa-solid fa-pen-to-square"></i
+              ></a>
+            </th>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div
+      class="collapse mt-20 bg-base-200 collapse-arrow border border-base-300"
+    >
+      <input type="checkbox" />
+      <div class="collapse-title text-xl font-medium">Add/edit a hero 🦸🦹</div>
+      <div class="collapse-content space-y-2 max-w-sm mx-auto">
+        <div class="flex flex-row space-x-2">
+          <div class="flex flex-col space-y-2 w-full">
+            <input
+              type="text"
+              v-model="newHero.nick"
+              placeholder="Nickname (unique for the party)"
+              class="input input-bordered w-full input-md"
+              v-on:input="
+                newHero.nick = $event.target.value.toLowerCase().trim()
+              "
+              :class="{ '!bg-base-300': editHeroSubmit }"
+              :disabled="editHeroSubmit"
+            />
+
+            <input
+              v-model="newHero.avatar"
+              type="text"
+              placeholder="Link of the avatar (optional)"
+              class="input input-bordered w-full input-md"
+            />
+          </div>
+
+          <div class="avatar">
+            <div class="w-24 mask mask-squircle">
+              <img v-bind:src="getAvatar()" />
             </div>
-          </td>
-          <td>
-            <p class="text-sm">{{ item.equipment }}</p>
-          </td>
-          <th>
-            <a class="btn btn-ghost"
-              ><i class="fa-solid fa-pen-to-square"></i
-            ></a>
-          </th>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="collapse mt-20 bg-base-200 collapse-arrow border border-base-300">
-    <input type="checkbox" />
-    <div class="collapse-title text-xl font-medium">Add/edit a hero 🦸🦹</div>
-    <div class="collapse-content space-y-2 max-w-sm mx-auto">
-      <div class="flex flex-row space-x-2">
-        
-        <div class="flex flex-col space-y-2 w-full">
-          <input
-            type="text"
-            v-model="newHero.nick"
-            placeholder="Nickname (unique for the party)"
-            class="input input-bordered w-full input-md"
-            v-on:input="newHero.nick = $event.target.value.toLowerCase().trim()"
-            :class="{ '!bg-base-300': editHeroSubmit }"
-            :disabled="editHeroSubmit"
-          />
-
-          <input
-            v-model="newHero.avatar"
-            type="text"
-            placeholder="Link of the avatar (optional)"
-            class="input input-bordered w-full input-md"
-          />
-        </div>
-
-        <div class="avatar  ">
-          <div class="w-24 mask mask-squircle">
-            <img v-bind:src="getAvatar()" />
           </div>
         </div>
-      </div>
 
-      <div class="flex space-x-2">
-        <button
-          v-if="items?.some((e) => e.key == newHero.nick)"
-          v-on:click="fillHero"
-          class="btn btn-sm btn-outline"
-          :disabled="editHeroSubmit"
-        >
-          Edit {{ newHero.nick }}
-        </button>
+        <div class="flex space-x-2">
+          <button
+            v-if="items?.some((e) => e.key == newHero.nick)"
+            v-on:click="fillHero"
+            class="btn btn-sm btn-outline"
+            :disabled="editHeroSubmit"
+          >
+            Edit {{ newHero.nick }}
+          </button>
 
-        <span
-          v-if="items?.some((e) => e.key == newHero.nick) && !editHeroSubmit"
-          class="my-auto text-primary"
-          >Nickname must be unique!</span
-        >
+          <span
+            v-if="items?.some((e) => e.key == newHero.nick) && !editHeroSubmit"
+            class="my-auto text-primary"
+            >Nickname must be unique!</span
+          >
 
-        <button
-          v-if="editHeroSubmit"
-          v-on:click="fillHero(false)"
-          class="btn btn-sm btn-outline"
-        >
-          Back
-        </button>
-      </div>
+          <button
+            v-if="editHeroSubmit"
+            v-on:click="fillHero(false)"
+            class="btn btn-sm btn-outline"
+          >
+            Back
+          </button>
+        </div>
 
-      <input
-        type="text"
-        v-model="newHero.name"
-        placeholder="Name or hero 'title'"
-        class="input input-bordered w-full input-md"
-      />
-      <input
-        type="text"
-        v-model="newHero.details"
-        placeholder="Details (class, race, etc)"
-        class="input input-bordered w-full input-md"
-      />
-      <textarea
-        v-model="newHero.equipment"
-        placeholder="Basic equipment"
-        class="textarea textarea-bordered w-full"
-      />
+        <input
+          type="text"
+          v-model="newHero.name"
+          placeholder="Name or hero 'title'"
+          class="input input-bordered w-full input-md"
+        />
+        <input
+          type="text"
+          v-model="newHero.details"
+          placeholder="Details (class, race, etc)"
+          class="input input-bordered w-full input-md"
+        />
+        <textarea
+          v-model="newHero.equipment"
+          placeholder="Basic equipment"
+          class="textarea textarea-bordered w-full"
+        />
 
-      <div class="flex justify-end items-center">
-        <button
-          class="btn btn-primary"
-          v-on:click="createHero()"
-          :disabled="
-            items?.some((e) => e.key == newHero.nick) && !editHeroSubmit
-          "
-        >
-          <span v-if="!editHeroSubmit">Create {{ newHero.nick }}</span
-          ><span v-else>Edit {{ newHero.nick }}</span>
-        </button>
+        <div class="flex justify-end items-center">
+          <button
+            class="btn btn-primary"
+            v-on:click="createHero()"
+            :disabled="
+              items?.some((e) => e.key == newHero.nick) && !editHeroSubmit
+            "
+          >
+            <span v-if="!editHeroSubmit">Create {{ newHero.nick }}</span
+            ><span v-else>Edit {{ newHero.nick }}</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

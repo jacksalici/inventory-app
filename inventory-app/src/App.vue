@@ -33,7 +33,7 @@ function inputPartyIdSubmit() {
       <div class="flex-none">
         <button
           class="btn btn-square btn-ghost"
-          onclick="my_modal_1.showModal()"
+          onclick="menu_modal.showModal()"
         >
           <i class="fa-solid fa-gear"></i>
         </button>
@@ -41,11 +41,11 @@ function inputPartyIdSubmit() {
     </div>
 
     <div class="container max-w-xl mx-auto mt-4 mb-20 p-2">
-      <Heroes />
+      <router-view />
     </div>
 
     <!--DIALOG-->
-    <dialog id="my_modal_1" class="modal">
+    <dialog id="menu_modal" class="modal">
       <form method="dialog" class="modal-box">
         <h3 class="font-bold text-lg">
           Settings <i class="fa-solid fa-gears"></i>

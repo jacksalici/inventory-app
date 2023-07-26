@@ -1,6 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Inventory from "../components/Inventory.vue";
-import Heroes from "../components/Heroes.vue";
+import Single from "../views/Single.vue";
+import Heroes from "../views/Heroes.vue";
+import Initialize from "../views/Initialize.vue";
+
+
+function keyInit(){
+  return !!localStorage.DETA_API_KEY
+}
 
 export default createRouter({
   history: createWebHistory(import.meta.BASE_URL),
@@ -8,12 +14,13 @@ export default createRouter({
     {
       path: "/",
       name: "",
-      component: Heroes,
+      component: keyInit() ? Heroes : Initialize,
+    
     },
     {
-      path: "/:hero",
+      path: "/h/:hero",
       name: "heroes",
-      component: Inventory,
+      component: Single,
     },
   ],
 });

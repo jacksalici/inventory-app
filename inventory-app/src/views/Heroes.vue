@@ -1,6 +1,8 @@
 <script setup>
 import { ref, watchEffect, onMounted } from "vue";
 import { Deta } from "deta";
+import Title from '../components/Title.vue';
+
 
 const items = ref();
 const heroes = ref();
@@ -83,16 +85,10 @@ watchEffect(async () => {
 
 <template>
   <!--TITLE-->
-  <div
-    class="hero rounded-xl bg-base-200 mt-2"
-    style="background-image: url(/drawing.jpg); background-position: 0px -120px"
-  >
-    <div class="hero-overlay rounded-xl bg-opacity-60"></div>
-    <div class="hero-content flex-col text-center text-base-100">
-      <h1 class="my-4 text-3xl font-bold">The Inventory App</h1>
-    </div>
-  </div>
+  <Title />
 
+  
+  
   <div class="mt-8" v-if="error">
     <div class="alert alert-warning">
       <span>{{ error }}</span>
@@ -125,7 +121,7 @@ watchEffect(async () => {
               <p class="text-sm">{{ item.equipment }}</p>
             </td>
             <td class="px-1">
-              <a class="btn btn-sm border-base-300" :href="'/'+ item.key "
+              <a class="btn btn-sm border-base-300" :href="'/h/'+ item.key "
                 ><i class="fa-solid fa-pen-to-square"></i
               ></a>
             </td>

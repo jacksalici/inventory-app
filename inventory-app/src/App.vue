@@ -26,7 +26,7 @@ const inputPartyIdCookie = ref(localStorage.DETA_PARTY_ID);
           class="btn btn-square btn-ghost"
           onclick="menu_modal.showModal()"
         >
-          <i class="fa-solid fa-gear"></i>
+          <i class="fa-solid fa-bars"></i>
         </button>
       </div>
     </div>
@@ -54,7 +54,7 @@ const inputPartyIdCookie = ref(localStorage.DETA_PARTY_ID);
   <dialog id="menu_modal" class="modal">
       <form method="dialog" class="modal-box">
         <h3 class="font-bold text-lg">
-          Settings <i class="fa-solid fa-gears"></i>
+          Settings 
         </h3>
 
         

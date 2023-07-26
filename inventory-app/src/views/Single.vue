@@ -35,7 +35,8 @@ async function fetchInventory() {
 }
 
 async function addNewItem() {
-  dbInventory.put(newItem.value);
+  await dbInventory.put(newItem.value);
+  newItem.value = { hero: route.params.hero, used: false }
   fetchInventory();
 }
 
@@ -80,9 +81,9 @@ watchEffect(async () => {
 
 <template>
   <!--HERO DATA-->
-  <div class="flex mt-3 px-4 items-start space-x-3">
+  <div class="flex mt-3 px-4 items-start space-x-3 bg-base-200 p-4 rounded-lg border-base-300 border">
     <div class="avatar mt-3">
-      <div class="mask mask-squircle w-28 h-28">
+      <div class="mask mask-squircle w-20 h-20">
         <img v-bind:src="hero.avatar" alt="Avatar" />
       </div>
     </div>
@@ -94,7 +95,7 @@ watchEffect(async () => {
         </span>
       </div>
       <div class="text-sm opacity-50">{{ hero.details }}</div>
-      <p>{{ hero.equipment }}</p>
+      <p style="text-wrap: balance">{{ hero.equipment }}</p>
     </div>
   </div>
 
@@ -202,7 +203,7 @@ watchEffect(async () => {
     <div class="join join-vertical">
       <div class="bg-opacity-50 join join-horizontal w-full">
         <input
-          class="input input-bordered bg-trasparent !rounded-bl-none join-item w-full"
+          class="input bg-opacity-50 input-bordered !rounded-bl-none join-item w-full"
           placeholder="Description"
           v-model="newItem.object"
         />
@@ -226,7 +227,7 @@ watchEffect(async () => {
         />
 
         <button
-          class="btn join-item border-base-300 !rounded-tr-none"
+          class="btn join-item btn-primary  !rounded-tr-none"
           v-on:click="addNewItem()"
         >
           ADD ITEM

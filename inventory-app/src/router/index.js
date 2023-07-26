@@ -4,6 +4,8 @@ import Heroes from "../views/Heroes.vue";
 import Initialize from "../views/Initialize.vue";
 import About from "../views/About.vue";
 import NotFound from "../views/NotFound.vue"
+import Settings from "../views/Settings.vue"
+
 
 function keyInit(){
   return !!localStorage.DETA_API_KEY
@@ -21,6 +23,12 @@ export default createRouter({
       path: "/about/",
       name: "About",
       component: About,
+    
+    },
+    {
+      path: "/settings/",
+      name: "Settings",
+      component: Settings,
     
     },
     { path: '/h',

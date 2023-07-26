@@ -9,6 +9,13 @@ const DETA_API_KEY = 'DETA_API_KEY'
 const DETA_PARTY_IDS_SAVED = 'DETA_PARTY_IDS_SAVED'
 const DETA_PARTY_ID = 'DETA_PARTY_ID'
 
+defineProps({
+  showID: {
+    type: Boolean,
+    default: false
+  },
+})
+
 function setApiKey(key) {
   localStorage.setItem(DETA_API_KEY, key);
   console.log(localStorage.DETA_API_KEY);
@@ -32,10 +39,10 @@ function changePartiesID(id) {
 
 function partyButtonText(){
     if (!party.value){
-        return '👀';
+        return 'PARTY ID';
     }else if (parties.value.has(party.value)){
-        return 'REMOVE'
-    }else{return 'ADD'}
+        return 'REMOVE PARTY ID'
+    }else{return 'ADD PARTY ID'}
 }
 
 function getPartyIDs() {
@@ -54,7 +61,7 @@ watchEffect(async () => {
       v-on:change="(event) => setApiKey(event.target.value)"
       placeholder="Very long and nasty string"
     />
-    <div class="flex justify-between pt-4">
+    <div class="flex justify-between ">
       <button
         class="btn btn-outline"
         onclick="doc.showModal()"
@@ -62,6 +69,7 @@ watchEffect(async () => {
         DOCS <i class="fa-solid fa-life-ring"></i>
       </button>
       <input
+        v-if="!showID"
         type="checkbox"
         aria-label="PARTY IDS"
         v-model="showParties"
@@ -70,15 +78,15 @@ watchEffect(async () => {
       <button class="btn btn-primary">SAVE</button>
     </div>
 
-    <div v-if="showParties">
-      <div class="mt-4 join w-full">
+    <div v-if="showParties || showID">
+      <div class="mt-6 join w-full">
         <input
           class="input input-bordered w-full join-item input-sm"
           v-model="party"
-          placeholder="Add or remove new party ID"
+          placeholder="Add or remove new party ID (optionally)"
         />
         <button
-          class="btn join-item border border-base-300 btn-sm"
+          class="btn join-item btn-sm btn-primary"
           @click="changePartiesID(party)"
         >
           {{partyButtonText()}}

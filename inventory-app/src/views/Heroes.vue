@@ -92,7 +92,9 @@ watchEffect(async () => {
   <div class="mt-8" v-if="error">
     <div class="alert alert-warning">
       <span>{{ error }}</span>
-      <a class="btn btn-outline" href="/">RELOAD PAGE</a>
+      
+      <router-link to="/" class="btn btn-outline">RELOAD PAGE</router-link>
+
     </div>
   </div>
   

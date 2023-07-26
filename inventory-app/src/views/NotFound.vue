@@ -1,12 +1,12 @@
 <template>
-   <div class=space-y-3>
-    <h1 class="text-4xl font-bold font-serif">
-        404 Error
-    </h1>
-    <div class="flex space-y-2 flex-col balanced text-lg ">
-        <div>Ops, that's awkward... Looks like you're lost, but here's a link that takes you back to the <a class="link" href=/>home</a>. 
-        If you are confident about your URL, it is likely that the content you were searching for has been moved to a new location. </div>
-        <img src=https://media.tenor.com/khjOpd7-ungAAAAM/viggo-mortensen-journey.gif>
+    
+    <div class="flex space-y-7 py-7 flex-col balanced text-lg ">
+        <h1 class="text-4xl font-bold  text-center font-mono uppercase">
+        404 Error / page not found
+        </h1>
+        <router-link to="/" class="btn btn-primary">Go back to home</router-link>
+        
+        <img class="rounded-lg" src=https://media.tenor.com/khjOpd7-ungAAAAM/viggo-mortensen-journey.gif>
     </div>
-    </div>
+
 </template>

@@ -10,13 +10,12 @@ function keyInit(){
 }
 
 export default createRouter({
-  history: createWebHistory(import.meta.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
       name: "Home",
       component: keyInit() ? Heroes : Initialize,
-    
     },
     {
       path: "/about/",

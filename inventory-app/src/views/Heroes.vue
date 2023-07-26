@@ -2,6 +2,7 @@
 import { ref, watchEffect, onMounted } from "vue";
 import { Deta } from "deta";
 import Title from '../components/Title.vue';
+import router from "../router";
 
 
 const items = ref();
@@ -120,9 +121,9 @@ watchEffect(async () => {
               <p class="text-sm">{{ item.equipment }}</p>
             </td>
             <td class="px-1">
-              <a class="btn btn-sm border-base-300" :href="'/h/'+ item.key "
+              <button class="btn btn-sm border-base-300" @click="router.push('/h/'+ item.key)" 
                 ><i class="fa-solid fa-pen-to-square"></i
-              ></a>
+              ></button>
             </td>
           </tr>
         </tbody>

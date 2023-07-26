@@ -3,6 +3,10 @@ defineProps({
   extended: {
     type: Boolean,
     default: false
+  },
+  title: {
+    type: String,
+    default: 'The Inventory App'
   }
 })
 </script><template>
@@ -12,15 +16,15 @@ defineProps({
   >
     <div class="hero-overlay bg-primary-content rounded-xl bg-opacity-60"></div>
     <div class="hero-content flex-col text-center py-10 text-base-100">
-      <h1 class="text-4xl font-bold">The Inventory App</h1>
-      <h2 v-if="extended" class="text-xl font-bold"> Manage your favorite RPG hero items like a breeze!</h2>
+      <h1 class="text-4xl md:text-6xl font-serif font-bold">{{title}}</h1>
+      <h2 v-if="extended" class="text-xl font-bold" style="text-wrap: balance"> Manage your favorite RPG hero items like a breeze!</h2>
     </div>
   </div>
 
-  <div class="card card-side bg-primary mt-4">
-  <figure  class="max-w-[250px]"><img src="/hero2.png" alt="Hero screeshot" /></figure>
-  <div class="card-body">
-    <p class="text-lg font-medium">The Inventory App is a fast and 100% free way to track the equipments of your role-play-games  </p>
+  <div class="card card-side bg-orange-400 bg-opacity-90 mt-4 md:bg-transparent" v-if="extended">
+  <figure  class="max-w-[220px] p-1 radius"><img src="/hero2.png" class="drop-shadow-xl p-2" alt="Hero screeshot" /></figure>
+  <div class="card-body md:px-3">
+    <div class="text-xl text-secondary-content my-auto font-serif md:text-3xl md:text-orange-500" >The Inventory App is a fast, open-source and 100% free way to track the equipment of your role-play-games' characters.  </div>
   </div>
 </div>
 

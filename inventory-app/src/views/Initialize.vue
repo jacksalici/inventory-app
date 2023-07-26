@@ -7,20 +7,12 @@ import Title from "../components/Title.vue";
   <Title extended />
 
   <div
-    class="card max-w-xl mt-5 w-full mx-auto bg-opacity-50 bg-base-200 border-base-300 card-bordered"
+    class="card max-w-xl mt-5 w-full mx-auto bg-base-200 border-base-300 card-bordered"
   >
     <div class="card-body">
-      <h2 class="card-title text-2xl">Get Started! 🚀</h2>
+      <h2 class="card-title text-2xl">Get Started! <i class="fa-solid fa-rocket"></i></h2>
       <DetaSettings />
     </div>
   </div>
 
-  <div
-    class="card max-w-xl mt-5 w-full mx-auto bg-opacity-50 bg-base-200 border-base-300 card-bordered"
-  >
-    <div class="card-body">
-      <h2 class="card-title text-2xl">Create your hero is as simple as this! 🦹</h2>
-      <DetaSettings />
-    </div>
-  </div>
 </template>

@@ -85,9 +85,8 @@ watchEffect(async () => {
 
 <template>
   <!--TITLE-->
-  <Title />
+  <Title title="The Heroes" />
 
-  
   
   <div class="mt-8" v-if="error">
     <div class="alert alert-warning">

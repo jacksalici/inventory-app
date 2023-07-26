@@ -17,7 +17,7 @@ const inputPartyIdCookie = ref(localStorage.DETA_PARTY_ID);
   <div class="flex flex-col min-h-screen ">
     <div class="navbar bg-base-200">
       <div class="flex-1">
-        <a class="btn btn-ghost normal-case text-xl" href="/"
+        <a class="btn btn-ghost normal-case font-serif text-2xl" href="/"
           >The Inventory App</a
         >
       </div>
@@ -31,7 +31,7 @@ const inputPartyIdCookie = ref(localStorage.DETA_PARTY_ID);
       </div>
     </div>
 
-    <div class="container max-w-xl mb-auto mx-auto self-stretch p-2">
+    <div class="container max-w-2xl mb-auto mx-auto self-stretch p-2">
       <router-view />
     </div>
 

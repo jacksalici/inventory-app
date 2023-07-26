@@ -4,7 +4,13 @@ module.exports = {
   plugins: [
       require('daisyui')
   ],
-  theme: {},
+  theme: {
+    fontFamily:{
+      'sans': ['Ubuntu', 'ui-sans-serif'],
+      'serif': ['DM Serif Display', 'ui-serif'],
+      'mono': ['Ubuntu Mono', 'ui-monospace'],
+    }
+  },
   daisyui: {
     themes: [{
       inventory: {

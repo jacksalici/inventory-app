@@ -56,16 +56,16 @@ watchEffect(async () => {
     />
     <div class="flex justify-between pt-4">
       <button
-        class="btn btn-base-200 border border-base-300"
+        class="btn btn-outline"
         onclick="doc.showModal()"
       >
-        DOCS
+        DOCS <i class="fa-solid fa-life-ring"></i>
       </button>
       <input
         type="checkbox"
         aria-label="PARTY IDS"
         v-model="showParties"
-        class="ml-auto mr-1 btn border border-base-300"
+        class="ml-auto mr-1 btn btn-outline"
       />
       <button class="btn btn-primary">SAVE</button>
     </div>

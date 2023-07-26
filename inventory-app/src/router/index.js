@@ -2,8 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Single from "../views/Single.vue";
 import Heroes from "../views/Heroes.vue";
 import Initialize from "../views/Initialize.vue";
-import About from "../views/About.vue"
-
+import About from "../views/About.vue";
+import NotFound from "../views/NotFound.vue"
 
 function keyInit(){
   return !!localStorage.DETA_API_KEY
@@ -23,10 +23,14 @@ export default createRouter({
       component: About,
     
     },
+    { path: '/h',
+     redirect: '/' 
+    },
     {
       path: "/h/:hero",
       name: "Hero",
       component: Single,
     },
+    { path: '/:pathMatch(.*)', component: NotFound }
   ],
 });

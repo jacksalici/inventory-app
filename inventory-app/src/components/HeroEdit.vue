@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 import { Deta } from "deta";
 
 defineOptions({
@@ -13,8 +13,11 @@ const props = defineProps({
     type: Object
   },
   heroes: {
-    type: Object
-    
+    type: Object   
+  },
+  single: {
+    type: Boolean,
+    default: false   
   }
 })
 
@@ -70,9 +73,19 @@ function fillHero(fill = true) {
   }
 }
 
+watchEffect(async ()=>{
+    
+    if (props.single){
+        newHero.value.nick = props.heroes[0].key
+        console.log(props.heroes); console.log(newHero.value)
+        fillHero()
+    }
+})
+
 </script>
 <template>
-  <div class="flex flex-row space-x-2">
+  <div class="flex flex-col space-y-2">
+    <div class="flex flex-row space-x-2">
     <div class="flex flex-col space-y-2 w-full">
       <input
         type="text"
@@ -99,7 +112,7 @@ function fillHero(fill = true) {
     </div>
   </div>
 
-  <div class="flex space-x-2">
+  <div class="flex space-x-2" v-if='!props.single'>
     <button
       v-if="heroes?.some((e) => e.key == newHero.nick)"
       v-on:click="fillHero"
@@ -151,5 +164,6 @@ function fillHero(fill = true) {
       <span v-if="!editHeroSubmit">Create {{ newHero.nick }}</span
       ><span v-else>Edit {{ newHero.nick }}</span>
     </button>
+  </div>
   </div>
 </template>

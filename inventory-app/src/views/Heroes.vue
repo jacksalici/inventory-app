@@ -8,22 +8,13 @@ import router from "../router";
 
 
 const heroes = ref();
-const newHero = ref({});
-const editHeroOption = ref(false);
-const editHeroSubmit = ref(false);
-
 const error = ref("");
 
 let deta, dbHero = null;
 
-
-
-
-
 async function fetchHero() {
   heroes.value = (await dbHero.fetch()).items;
 }
-
 
 watchEffect(async () => {
   try {
@@ -87,7 +78,7 @@ watchEffect(async () => {
       <input type="checkbox" />
       <div class="collapse-title text-xl font-medium">Add/edit a hero 🦸🦹</div>
       <div class="collapse-content space-y-2 max-w-sm mx-auto">
-        <HeroEdit :db-hero="dbHero" :heroes="heroes" @fetchHero="fetchHero()"/>
+        <HeroEdit :dbHero="dbHero" :heroes="heroes" @fetchHero="fetchHero()"/>
       </div>
     </div>
   </div>

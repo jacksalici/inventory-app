@@ -3,13 +3,12 @@ import { ref, watchEffect, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
 import { Deta } from "deta";
-import Heroes from "./Heroes.vue";
+import HeroEdit from "../components/HeroEdit.vue";
 
 const router = useRouter();
 const route = useRoute();
 
 const items = ref();
-const heroes = ref();
 const hero = ref({
   avatar: "/drawing.jpg",
   name: "Your Hero",
@@ -19,7 +18,6 @@ const hero = ref({
     "All that is gold does not glitter, not all those who wander are lost.",
 });
 const tempItem = ref({});
-
 const newItem = ref({ hero: route.params.hero, used: false });
 
 const error = ref("");
@@ -29,9 +27,12 @@ let deta,
   dbHero = null;
 
 async function fetchInventory() {
-  let res = await dbInventory.fetch({ hero: route.params.hero });
-  items.value = res.items;
+  items.value = (await dbInventory.fetch({ hero: route.params.hero })).items;
   console.log(items.value);
+}
+
+async function fetchHero() {
+  hero.value = await dbHero.get(route.params.hero);
 }
 
 async function addNewItem() {
@@ -69,8 +70,7 @@ watchEffect(async () => {
     }
     dbInventory = deta.Base("inventory" + id);
     dbHero = deta.Base("heroes" + id);
-    hero.value = await dbHero.get(route.params.hero);
-
+    fetchHero()
     fetchInventory();
   } catch (e) {
     error.value = "Please check the API key in the menu options.";
@@ -82,22 +82,39 @@ watchEffect(async () => {
 <template>
   <!--HERO DATA-->
   <div class="flex mt-3 px-4 items-start space-x-3 bg-base-200 p-4 rounded-lg border-base-300 border">
-    <div class="avatar mt-3">
+    <div class="avatar mt-1">
       <div class="mask mask-squircle w-20 h-20">
         <img v-bind:src="hero.avatar" alt="Avatar" />
       </div>
     </div>
     <div>
-      <div class="font-bold text-lg">
-        {{ hero.name }}
+      <div class=" flex justify-between">
+        <div class="font-bold text-lg">{{ hero.name }}
         <span class="font-mono font-normal text-sm opacity-50">
           ({{ hero.key }})
-        </span>
+          <div class="text-sm opacity-50">{{ hero.details }}</div>
+        </span></div>
+        <button
+              class="btn my-auto btn-sm btn-secondary btn-outline"
+              onclick="editHeroModal.showModal()"
+            
+            >
+            <i class="fa-solid fa-pen-to-square"></i>
+            </button>
       </div>
-      <div class="text-sm opacity-50">{{ hero.details }}</div>
+  
       <p style="text-wrap: balance">{{ hero.equipment }}</p>
     </div>
   </div>
+
+  <dialog id="editHeroModal" class="modal">
+  <form method="dialog" class="modal-box">
+    <h3 class="font-bold pb-2 text-lg">Edit your hero <span class="font-normal opacity-50 font-mono">({{ route.params.hero }})</span></h3>
+    <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"><i class="fa-solid fa-xmark"></i></button>
+    <HeroEdit :dbHero="dbHero" :heroes="[hero]" @fetchHero="fetchHero()" single/>
+  
+  </form>
+</dialog>
 
   <!--INVENTORY TABLE-->
   <div class="overflow-x-auto p-4 mt-8">

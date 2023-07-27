@@ -39,11 +39,16 @@ async function createHero() {
   emit('fetchHero')
   fillHero(false);
 
-  if (props.single){
-    once.value = true
-  }else{
+  if (!props.single){
     newHero.value.nick = ""
   }
+}
+
+async function deleteHero() {
+  await props.dbHero.delete(
+    newHero.value.nick.trim()
+  );
+  emit('fetchHero')
 }
 
 function getAvatar() {
@@ -159,15 +164,25 @@ onUpdated(()=>{
     class="textarea textarea-bordered w-full"
   />
 
-  <div class="flex justify-end items-center">
+  <div class="flex justify-between items-center">
     <button
-      class="btn btn-primary"
+      class="mr-auto btn btn-outline btn-error"
+      v-on:click="deleteHero()"
+      v-if="editHeroSubmit"
+    >
+      DELETE
+    </button>
+    
+    <button
+      class="ml-auto btn btn-primary"
       v-on:click="createHero()"
       :disabled="heroes?.some((e) => e.key == newHero.nick) && !editHeroSubmit"
     >
       <span v-if="!editHeroSubmit">Create {{ newHero.nick }}</span
       ><span v-else>Edit {{ newHero.nick }}</span>
     </button>
+
+    
   </div>
   </div>
 </template>

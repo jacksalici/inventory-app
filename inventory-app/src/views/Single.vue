@@ -88,8 +88,8 @@ onMounted(async ()=>{
         <img v-bind:src="hero.avatar" alt="Avatar" />
       </div>
     </div>
-    <div>
-      <div class=" flex w-full gap-2">
+    <div class="w-full">
+      <div class=" flex w-full justify-between">
         <div class="font-bold text-lg">{{ hero.name }}
         <span class="font-mono font-normal text-sm opacity-50">
           ({{ hero.key }})
@@ -120,7 +120,7 @@ onMounted(async ()=>{
 
   <!--INVENTORY TABLE-->
   <div class="overflow-x-auto p-4 mt-8">
-    <div v-if="!items.length" class="font-serif text-xl text-center text-secondary"> No items found. Add the first down below. </div>
+    <div v-if="items == undefined || items.length == 0" class="font-serif text-xl text-center text-secondary"> No items found. Add the first down below. </div>
     <table v-else class="table mx-auto max-w-sm">
       <tbody>
         <tr v-for="(item, index) in items">

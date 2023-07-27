@@ -1,71 +1,112 @@
 <script setup>
-import { ref, watchEffect } from "vue";
+import { onBeforeMount, ref, watchEffect } from "vue";
+import { Deta } from "deta";
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
 
 const showParties = ref(false);
 const parties = ref(new Set());
 const party = ref();
+const deta_api_key = ref("");
+const deta_api_key_valid = ref({status: false, message: ""});
 
-const DETA_API_KEY = 'DETA_API_KEY'
-const DETA_PARTY_IDS_SAVED = 'DETA_PARTY_IDS_SAVED'
-const DETA_PARTY_ID = 'DETA_PARTY_ID'
+const DETA_API_KEY = "DETA_API_KEY";
+const DETA_PARTY_IDS_SAVED = "DETA_PARTY_IDS_SAVED";
+const DETA_PARTY_ID = "DETA_PARTY_ID";
 
 defineProps({
   showID: {
     type: Boolean,
-    default: false
+    default: false,
   },
-})
+});
+
+async function checkApiKey() {
+  try {
+    const deta = Deta(deta_api_key.value);
+    
+    let id = localStorage.DETA_PARTY_ID ? "_" + localStorage.DETA_PARTY_ID : "_";
+    let heroes = (await deta.Base("heroes" + id).fetch()).items;
+
+    localStorage.setItem(DETA_API_KEY, deta_api_key.value);
+    deta_api_key_valid.value = {status: true, message: "Ok, let's go!"};
+
+  } catch (e) {
+    console.log(e)
+    deta_api_key_valid.value = {status: false, message: "Please, add a real key."};
+  }
+}
 
 function setApiKey(key) {
   localStorage.setItem(DETA_API_KEY, key);
   console.log(localStorage.DETA_API_KEY);
 }
 function changePartiesID(id) {
-    if (!party.value){
-       return
-    }else if (parties.value.has(party.value)){
-        parties.value.delete(party.value)
-        if (localStorage.getItem(DETA_PARTY_ID) == party.value){
-            localStorage.removeItem(DETA_PARTY_ID);
-        }
-    }else{
-        parties.value.add(id)
-        localStorage.setItem(DETA_PARTY_ID, id);
+  if (!party.value) {
+    return;
+  } else if (parties.value.has(party.value)) {
+    parties.value.delete(party.value);
+    if (localStorage.getItem(DETA_PARTY_ID) == party.value) {
+      localStorage.removeItem(DETA_PARTY_ID);
     }
-    
-    localStorage.setItem(DETA_PARTY_IDS_SAVED, JSON.stringify([...parties.value]))
-    
+  } else {
+    parties.value.add(id);
+    localStorage.setItem(DETA_PARTY_ID, id);
+  }
+
+  localStorage.setItem(
+    DETA_PARTY_IDS_SAVED,
+    JSON.stringify([...parties.value])
+  );
 }
 
-function partyButtonText(){
-    if (!party.value){
-        return 'PARTY ID';
-    }else if (parties.value.has(party.value)){
-        return 'REMOVE PARTY ID'
-    }else{return 'ADD PARTY ID'}
+function partyButtonText() {
+  if (!party.value) {
+    return "PARTY ID";
+  } else if (parties.value.has(party.value)) {
+    return "REMOVE PARTY ID";
+  } else {
+    return "ADD PARTY ID";
+  }
 }
 
 function getPartyIDs() {
-    parties.value = new Set(JSON.parse(localStorage.getItem(DETA_PARTY_IDS_SAVED)))
+  parties.value = new Set(
+    JSON.parse(localStorage.getItem(DETA_PARTY_IDS_SAVED))
+  );
 }
 
 watchEffect(async () => {
   getPartyIDs();
 });
+
+onBeforeMount(()=>{
+   deta_api_key.value = localStorage.getItem(DETA_API_KEY)
+})
 </script>
 <template>
   <div class="flex flex-col space-y-2 mt-3">
-    <p>Add your API key.</p>
-    <input
-      class="input input-bordered input-lg w-full"
-      v-on:change="(event) => setApiKey(event.target.value)"
+    <p>Add your API key. <span :class="{'text-primary': deta_api_key_valid.status, 'text-error': !deta_api_key_valid.status}">{{ deta_api_key_valid.message }}</span></p>
+    
+    <div class="flex space-x-1">
+        <input
+      v-model="deta_api_key"
+      class="input input-bordered w-full"
       placeholder="Very long and nasty string"
     />
-    <div class="flex justify-between ">
-      <button
-        class="btn btn-outline"
-        onclick="doc.showModal()"
-      >
+    <button class="btn btn-primary " @click="checkApiKey()">
+        CHECK
+      </button>
+    </div>
+
+    <a class="btn btn-accent btn-lg" v-if="deta_api_key_valid.status" href="/">
+        Let's go! <i class="fa-solid fa-arrows-rotate"></i>
+    </a>
+
+    <div class="flex">
+      <button class="btn btn-xs btn-outline" onclick="doc.showModal()">
         DOCS <i class="fa-solid fa-life-ring"></i>
       </button>
       <input
@@ -73,10 +114,11 @@ watchEffect(async () => {
         type="checkbox"
         aria-label="PARTY IDS"
         v-model="showParties"
-        class="ml-auto mr-1 btn btn-outline"
+        class="btn btn-xs ml-1 mr-auto btn-outline"
       />
-      <button class="btn btn-primary">SAVE</button>
+      
     </div>
+    
 
     <div v-if="showParties || showID">
       <div class="mt-6 join w-full">
@@ -89,14 +131,15 @@ watchEffect(async () => {
           class="btn join-item btn-sm btn-primary"
           @click="changePartiesID(party)"
         >
-          {{partyButtonText()}}
+          {{ partyButtonText() }}
         </button>
       </div>
-      
-      <div class="flex mt-2 gap-1"><div class="badge badge-secondary gap-2" v-for="party in parties">
-        {{party}}
-    </div></div>
-      
+
+      <div class="flex mt-2 gap-1">
+        <div class="badge badge-secondary gap-2" v-for="party in parties">
+          {{ party }}
+        </div>
+      </div>
     </div>
   </div>
 

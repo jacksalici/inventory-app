@@ -18,6 +18,7 @@ export default createRouter({
       path: "/",
       name: "Home",
       component: keyInit() ? Heroes : Initialize,
+      props: true
     },
     {
       path: "/about/",
@@ -38,6 +39,8 @@ export default createRouter({
       path: "/h/:hero",
       name: "Hero",
       component: Single,
+      props: true
+      
     },
     { path: '/:pathMatch(.*)', component: NotFound }
   ],

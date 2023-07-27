@@ -6,39 +6,42 @@ import HeroEdit from '../components/HeroEdit.vue';
 
 import router from "../router";
 
+defineOptions({
+    inheritAttrs:false
+})
+
+const props = defineProps({
+  dbHero: {
+    type: Object
+  },
+  dbInventory: {
+    type: Object
+  },
+})
+
+
 
 const heroes = ref();
 const error = ref("");
 
-let deta, dbHero = null;
-
 async function fetchHero() {
-  heroes.value = (await dbHero.fetch()).items;
+  heroes.value = (await props.dbHero.fetch()).items;
 }
 
-watchEffect(async () => {
-  try {
-    deta = Deta(localStorage.DETA_API_KEY);
-    let id = "";
-    if (localStorage.DETA_PARTY_ID) {
-      id = "-" + localStorage.DETA_PARTY_ID;
-    }
-    dbHero = deta.Base("heroes" + id);
-    fetchHero();
-  } catch (e) {
-    error.value = "Please check the API key in the menu options.";
-    console.error(e);
-  }
-});
+watchEffect(async ()=>{
+  fetchHero()
+})
+
 </script>
 
 <template>
   <!--TITLE-->
   <Title title="The Heroes" />
 
-  <!--HERO LIST-->
   <div class="flex flex-col h-full justify-between ">
-    <div class="overflow-x-auto mt-8">
+    
+      <!--HERO LIST-->
+    <div v-if="heroes?.length>0" class="overflow-x-auto mt-8">
       <table class="table md:text-lg">
         <tbody>
           <tr v-for="(item, index) in heroes">
@@ -70,7 +73,9 @@ watchEffect(async () => {
         </tbody>
       </table>
     </div>
-
+    <div v-else class="font-serif text-xl text-center text-secondary mt-3">
+      No heroes found. Add one below to get started. 
+    </div>
     <!--HERO EDIT MENU-->
     <div
       class="collapse mt-4 bg-opacity-50 bg-base-200 collapse-arrow border border-base-300"

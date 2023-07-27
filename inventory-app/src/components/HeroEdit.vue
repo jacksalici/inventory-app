@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watchEffect, onMounted, onUpdated, onBeforeMount } from "vue";
 import { Deta } from "deta";
 
 defineOptions({
@@ -24,7 +24,7 @@ const props = defineProps({
 const newHero = ref({});
 const editHeroOption = ref(false);
 const editHeroSubmit = ref(false);
-
+const once = ref(true)
 
 async function createHero() {
   await props.dbHero.put(
@@ -38,7 +38,12 @@ async function createHero() {
   );
   emit('fetchHero')
   fillHero(false);
-  newHero.value.nick = ""
+
+  if (props.single){
+    once.value = true
+  }else{
+    newHero.value.nick = ""
+  }
 }
 
 function getAvatar() {
@@ -50,7 +55,7 @@ function getAvatar() {
     );
 }
 
-function fillHero(fill = true) {
+function fillHero(fill = true) {  
   if (fill) {
     props.heroes.forEach((element) => {
       if (newHero.value.nick == element.key) {
@@ -73,14 +78,13 @@ function fillHero(fill = true) {
   }
 }
 
-watchEffect(async ()=>{
-    
+
+onUpdated(()=>{
     if (props.single){
         newHero.value.nick = props.heroes[0].key
-        console.log(props.heroes); console.log(newHero.value)
-        fillHero()
     }
 })
+
 
 </script>
 <template>
@@ -94,7 +98,7 @@ watchEffect(async ()=>{
         class="input input-bordered w-full input-md"
         v-on:input="newHero.nick = $event.target.value.toLowerCase().trim()"
         :class="{ '!bg-base-300': editHeroSubmit }"
-        :disabled="editHeroSubmit"
+        :disabled="editHeroSubmit || props.single"
       />
 
       <input
@@ -112,7 +116,7 @@ watchEffect(async ()=>{
     </div>
   </div>
 
-  <div class="flex space-x-2" v-if='!props.single'>
+  <div class="flex space-x-2">
     <button
       v-if="heroes?.some((e) => e.key == newHero.nick)"
       v-on:click="fillHero"
@@ -123,7 +127,7 @@ watchEffect(async ()=>{
     </button>
 
     <span
-      v-if="heroes?.some((e) => e.key == newHero.nick) && !editHeroSubmit"
+      v-if="heroes?.some((e) => e.key == newHero.nick) && !editHeroSubmit && !single "
       class="my-auto text-primary"
       >Nickname must be unique!</span
     >

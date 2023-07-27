@@ -2,8 +2,21 @@
 import { ref, watchEffect, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 
-import { Deta } from "deta";
 import HeroEdit from "../components/HeroEdit.vue";
+
+defineOptions({
+    inheritAttrs:false
+})
+
+const props = defineProps({
+  dbHero: {
+    type: Object
+  },
+  dbInventory: {
+    type: Object
+  },
+})
+
 
 const router = useRouter();
 const route = useRoute();
@@ -22,38 +35,37 @@ const newItem = ref({ hero: route.params.hero, used: false });
 
 const error = ref("");
 
-let deta,
-  dbInventory,
-  dbHero = null;
-
 async function fetchInventory() {
-  items.value = (await dbInventory.fetch({ hero: route.params.hero })).items;
+  items.value = (await props.dbInventory.fetch({ hero: route.params.hero })).items;
   console.log(items.value);
 }
 
 async function fetchHero() {
-  hero.value = await dbHero.get(route.params.hero);
+  let h = await props.dbHero.get(route.params.hero);
+  if (h){
+    hero.value = h
+  }else{
+    router.push('/')
+  }
 }
 
 async function addNewItem() {
-  await dbInventory.put(newItem.value);
+  await props.dbInventory.put(newItem.value);
   newItem.value = { hero: route.params.hero, used: false }
   fetchInventory();
 }
 
 function initTempItem(index) {
   tempItem.value = Object.assign({}, items.value[index]);
-  fetchInventory();
-
 }
 
 async function editItem() {
-  await dbInventory.put(tempItem.value);
+  await props.dbInventory.put(tempItem.value);
   fetchInventory();
 }
 
 async function deleteItem() {
-  await dbInventory.delete(tempItem.value.key);
+  await props.dbInventory.delete(tempItem.value.key);
   fetchInventory();
 }
 
@@ -61,22 +73,11 @@ function showModalText(key) {
   return "modal" + key + ".showModal()";
 }
 
-watchEffect(async () => {
-  try {
-    deta = Deta(localStorage.DETA_API_KEY);
-    let id = "";
-    if (localStorage.DETA_PARTY_ID) {
-      id = "-" + localStorage.DETA_PARTY_ID;
-    }
-    dbInventory = deta.Base("inventory" + id);
-    dbHero = deta.Base("heroes" + id);
-    fetchHero()
-    fetchInventory();
-  } catch (e) {
-    error.value = "Please check the API key in the menu options.";
-    console.error(e);
-  }
-});
+onMounted(async ()=>{
+  fetchInventory()
+  fetchHero()
+})
+
 </script>
 
 <template>
@@ -88,7 +89,7 @@ watchEffect(async () => {
       </div>
     </div>
     <div>
-      <div class=" flex justify-between">
+      <div class=" flex w-full gap-2">
         <div class="font-bold text-lg">{{ hero.name }}
         <span class="font-mono font-normal text-sm opacity-50">
           ({{ hero.key }})
@@ -111,14 +112,16 @@ watchEffect(async () => {
   <form method="dialog" class="modal-box">
     <h3 class="font-bold pb-2 text-lg">Edit your hero <span class="font-normal opacity-50 font-mono">({{ route.params.hero }})</span></h3>
     <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"><i class="fa-solid fa-xmark"></i></button>
-    <HeroEdit :dbHero="dbHero" :heroes="[hero]" @fetchHero="fetchHero()" single/>
+    <HeroEdit :dbHero="props.dbHero" :heroes="[hero]" @fetchHero="fetchHero()" single/>
   
   </form>
 </dialog>
 
+
   <!--INVENTORY TABLE-->
   <div class="overflow-x-auto p-4 mt-8">
-    <table class="table mx-auto max-w-sm">
+    <div v-if="!items.length" class="font-serif text-xl text-center text-secondary"> No items found. Add the first down below. </div>
+    <table v-else class="table mx-auto max-w-sm">
       <tbody>
         <tr v-for="(item, index) in items">
           <td class="px-2 pl-auto">

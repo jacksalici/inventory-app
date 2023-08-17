@@ -1,7 +1,7 @@
 <script setup>
 import DetaSettings from "../components/DetaSettings.vue";
 import Title from "../components/Title.vue";
-import { ref, watchEffect, onMounted } from "vue";
+import { ref, watchEffect, computed, onMounted } from "vue";
 
 const props = defineProps({
   dbHero: {
@@ -13,6 +13,7 @@ const props = defineProps({
 })
 
 const party = ref("")
+const file = ref(null);
 
 
 onMounted(() => {
@@ -44,6 +45,20 @@ function download(filename, text) {
   document.body.removeChild(element);
 }
 
+const content = computed(() => {
+      if (!file.value) {
+        return "";
+      }
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        content.value = event.target.result;
+      };
+      reader.readAsText(file.value);
+
+      return content.value;
+    });
+
 </script>
 
 <template>
@@ -58,10 +73,12 @@ function download(filename, text) {
     <h2 class="card-title">Import Export settings</h2>
     <p> You can change the party id in the top right screen menu. Please note that the import option overwrites the data with the same key.</p>
     
-
+    {{ content }}
     <div class="card-actions justify-start">
       <button class="btn btn-sm" v-on:click="exportSettings()">Export {{ party }}</button>
-      <button class="btn btn-sm">Import {{ party }}</button>
+      <button class="btn btn-sm" onclick="document.getElementById('getFile').click()">Import {{ party }}</button>
+      <input type="file" class="file-input file-input-accent file-input-sm max-w-xs" id="getFile" style="display:none"  @change="importSettings()"/>
+
     </div>
   </div>
 </div>

@@ -1,7 +1,7 @@
 <script setup>
 import DetaSettings from "../components/DetaSettings.vue";
 import Title from "../components/Title.vue";
-import { ref, watchEffect, computed, onMounted } from "vue";
+import { ref, watchEffect, onMounted } from "vue";
 
 const props = defineProps({
   dbHero: {
@@ -18,15 +18,15 @@ const file = ref(null);
 
 onMounted(() => {
   party.value = localStorage.getItem("DETA_PARTY_ID")
-  party.value= party.value == "" ? "default" : "'" + party.value+"'"
+  party.value = party.value == "" ? "default" : "'" + party.value + "'"
 
 });
 
-async function exportSettings (){
+async function exportSettings() {
   let h = (await props.dbHero.fetch()).items;
   let i = (await props.dbInventory.fetch()).items;
 
-  let s = JSON.stringify({'inventory': i, 'heroes': h})
+  let s = JSON.stringify({ 'inventory': i, 'heroes': h })
 
   download("inventoryBackup.txt", s)
 
@@ -44,20 +44,17 @@ function download(filename, text) {
 
   document.body.removeChild(element);
 }
+async function importSettings(event) {
+  file.value = JSON.parse(await event.target.files[0].text())
+  console.log(file.value)
+  
+  await props.dbHero.putMany(file.value.heroes)
+  await props.dbInventory.putMany(file.value.inventory)
 
-const content = computed(() => {
-      if (!file.value) {
-        return "";
-      }
+}
 
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        content.value = event.target.result;
-      };
-      reader.readAsText(file.value);
 
-      return content.value;
-    });
+
 
 </script>
 
@@ -65,27 +62,22 @@ const content = computed(() => {
   <Title title="Settings" />
 
   <div class="pt-4 max-w-md m-auto">
-  <DetaSettings showID/>
+    <DetaSettings showID />
 
 
-  <div class="card w-full mt-12 bg-primary text-primary-content">
-  <div class="card-body">
-    <h2 class="card-title">Import Export settings</h2>
-    <p> You can change the party id in the top right screen menu. Please note that the import option overwrites the data with the same key.</p>
-    
-    {{ content }}
-    <div class="card-actions justify-start">
-      <button class="btn btn-sm" v-on:click="exportSettings()">Export {{ party }}</button>
-      <button class="btn btn-sm" onclick="document.getElementById('getFile').click()">Import {{ party }}</button>
-      <input type="file" class="file-input file-input-accent file-input-sm max-w-xs" id="getFile" style="display:none"  @change="importSettings()"/>
-
+    <div class="card w-full mt-12 bg-primary text-primary-content">
+      <div class="card-body">
+        <h2 class="card-title">Import Export settings</h2>
+        <p> You can change the party id in the top right screen menu. Please note that the import option overwrites the data with the same key.</p>
+        <div class="card-actions justify-start">
+          <button class="btn btn-sm" v-on:click="exportSettings()">Export {{ party }}</button>
+          <button class="btn btn-sm" onclick="document.getElementById('getFile').click()">Import {{ party }}</button>
+          <input type="file" ref="file" class="file-input file-input-accent file-input-sm max-w-xs" id="getFile" style="display:none" @change="importSettings" />
+        </div>
+      </div>
     </div>
+
+
+
   </div>
-</div>
-
-
-
-</div>
-
-
 </template>

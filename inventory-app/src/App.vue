@@ -105,7 +105,7 @@ onMounted(() => {
     <footer class="footer footer-center mt-3 p-4 bg-base-200 text-base-content">
       <div>
         <p>
-          © 2023 - Developed by <a class="link">jacksalici</a>, illustration by
+          © 2023 - Developed by <a class="link" href="https://jacksalici.com">jacksalici</a>, illustration by
           <a class="link" href="https://www.instagram.com/michelegalavotti/"
             >Mich</a
           >.

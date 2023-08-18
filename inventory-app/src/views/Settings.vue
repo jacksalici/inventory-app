@@ -1,6 +1,8 @@
 <script setup>
 import DetaSettings from "../components/DetaSettings.vue";
 import Title from "../components/Title.vue";
+import Faq from "../components/Faq.vue";
+
 import { ref, watchEffect, onMounted } from "vue";
 
 const props = defineProps({
@@ -18,7 +20,7 @@ const file = ref(null);
 
 onMounted(() => {
   party.value = localStorage.getItem("DETA_PARTY_ID")
-  party.value = party.value == "" ? "default" : "'" + party.value + "'"
+  party.value = party.value == "" || !party.value ? "default" : "'" + party.value + "'"
 
 });
 
@@ -78,6 +80,8 @@ async function importSettings(event) {
     </div>
 
 
+    
 
   </div>
+  <Faq/>
 </template>

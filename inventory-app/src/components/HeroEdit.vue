@@ -22,12 +22,11 @@ const props = defineProps({
 })
 
 const newHero = ref({});
-const editHeroOption = ref(false);
 const editHeroSubmit = ref(false);
-const once = ref(true)
 
 async function createHero() {
-  await props.dbHero.put(
+  if (props.single){
+    await props.dbHero.update(
     {
       name: newHero.value.name,
       details: newHero.value.details,
@@ -36,6 +35,18 @@ async function createHero() {
     },
     newHero.value.nick.trim()
   );
+  }else{
+    await props.dbHero.put(
+    {
+      name: newHero.value.name,
+      details: newHero.value.details,
+      equipment: newHero.value.equipment,
+      avatar: getAvatar(),
+    },
+    newHero.value.nick.trim()
+  );
+  }
+  
   emit('fetchHero')
   fillHero(false);
 

@@ -32,13 +32,26 @@ const hero = ref({
 const tempItem = ref({});
 const newItem = ref({ hero: route.params.hero, used: false });
 
-const slots = ref()
+const slots = ref();
 
 const error = ref("");
 
-async function updateSlots(){
-  await props.dbHero.update({slots: slots.value}, route.params.hero)
-} 
+async function updateSlots(text) {
+  if (text){
+    try{
+      console.log(text)
+      slots.value = JSON.parse(String(text))
+    }catch(e){
+      console.log(e)
+      error.value="Please use the right syntax."
+      return
+    }
+  }
+  
+  await props.dbHero.update({ slots: slots.value }, route.params.hero);
+  error.value=""
+  
+}
 
 async function fetchInventory() {
   items.value = (
@@ -51,8 +64,7 @@ async function fetchHero() {
   let h = await props.dbHero.get(route.params.hero);
   if (h) {
     hero.value = h;
-    slots.value = h.slots
-
+    slots.value = h.slots;
   } else {
     router.push("/");
   }
@@ -140,42 +152,65 @@ onMounted(async () => {
   </dialog>
 
   <!--SLOTS-->
-  <div class="flex mt-5  overflow-x-auto gap-3 items-center">
+  <div class="flex mt-5 overflow-x-auto gap-3 items-center">
     <div class="join join-vertical" v-for="(value, slot) in slots">
-      <div class="bg-base-300 btn-sm join-item font-bold text-center align-baseline"><span class="inline-block align-middle mt-1">{{ value }} {{slot}}</span></div>
+      <div
+        class="bg-base-300 btn-sm join-item font-bold text-center align-baseline"
+      >
+        <span class="inline-block align-middle mt-1"
+          >{{ value }} {{ slot }}</span
+        >
+      </div>
       <div class="join join-item justify-between">
-        <button class="btn btn-sm w-1/2 join-item border-1 border-base-300 !rounded-r-none" v-on:click="slots[slot]+=1; updateSlots()">
+        <button
+          class="btn btn-sm w-1/2 join-item border-1 border-base-300 !rounded-r-none"
+          v-on:click="
+            slots[slot] += 1;
+            updateSlots();
+          "
+        >
           <i class="fa-solid fa-plus"></i>
         </button>
-        <button class="btn btn-sm w-1/2 join-item border-1 border-base-300 !rounded-l-none" v-on:click="slots[slot]-=1; updateSlots()">
+        <button
+          class="btn btn-sm w-1/2 join-item border-1 border-base-300 !rounded-l-none"
+          v-on:click="
+            slots[slot] -= 1;
+            updateSlots();
+          "
+        >
           <i class="fa-solid fa-minus"></i>
         </button>
       </div>
     </div>
 
+    <!--SLOT MODAL-->
     <div>
       <button
-              class="btn my-auto border-base-300"
-              onclick="showModalSlot.showModal()"
-            >
-              <i class="fa-solid fa-ellipsis"></i>
-            </button>
+        class="btn my-auto border-base-300 h-full"
+        onclick="showModalSlot.showModal()"
+      >
+        <i class="fa-solid fa-ellipsis"></i>
+      </button>
     </div>
   </div>
 
-  
   <dialog id="showModalSlot" class="modal">
-  <form method="dialog" class="modal-box">
-    <h3 class="font-bold text-lg">Slots</h3>
-    <p class="py-4">Edit the slots of your hero.</p>
-    <textarea class="textarea textarea-bordered w-full" placeholder="Bio" v-bind:value="JSON.stringify(slots)"></textarea>
-    <div class="modal-action">
-      <!-- if there is a button in form, it will close the modal -->
-      <button class="btn">Close</button>
-    </div>
-  </form>
-</dialog>
-  
+    <form method="dialog" class="modal-box">
+      <h3 class="font-bold text-lg">Slots</h3>
+      <p class="py-4">Edit the slots of your hero.<br/><span class="font-mono opacity-50"> {"&lt;name: String>": &lt;quantity: Int>, ...}</span>
+        <br/><span class="text-error text-sm"> {{error}}</span></p>
+      <textarea
+        class="textarea textarea-bordered w-full"
+        placeholder='Create your slots (e.g. {"cp": 0, "sp": 0})'
+        :value="JSON.stringify(slots)"
+        @change="updateSlots($event.target.value)"
+      ></textarea>
+      <div class="modal-action">
+        <!-- if there is a button in form, it will close the modal -->
+        <button class="btn" v-on:click="updateSlots()">Save</button>
+      </div>
+    </form>
+  </dialog>
 
   <!--INVENTORY TABLE-->
   <div class="overflow-x-auto p-4 mt-8">

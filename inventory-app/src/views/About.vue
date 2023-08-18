@@ -1,6 +1,8 @@
 <script setup>
 import DetaSettings from "../components/DetaSettings.vue";
 import Title from "../components/Title.vue";
+import Faq from '../components/Faq.vue'
+
 
 defineOptions({
     inheritAttrs:false
@@ -20,6 +22,7 @@ const props = defineProps({
 
 <template>
 
-    <Title extended/>
+  <Title extended/>
+  <Faq />
 
 </template>

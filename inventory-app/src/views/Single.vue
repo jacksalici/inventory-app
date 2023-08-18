@@ -111,20 +111,31 @@ onMounted(async () => {
       </div>
     </div>
     <div class="w-full">
-      <div class="flex w-full justify-between">
-        <div class="font-bold text-lg">
+      <div class="flex w-full justify-between gap-1">
+        <div class="font-bold text-lg mr-auto">
           {{ hero.name }}
           <span class="font-mono font-normal text-sm opacity-50">
             ({{ hero.key }})
             <div class="text-sm opacity-50">{{ hero.details }}</div>
           </span>
         </div>
-        <button
-          class="btn my-auto btn-sm btn-secondary btn-outline"
+        <div>
+          <button
+          class="btn my-auto btn-sm btn-secondary btn-outline mr-1"
           onclick="editHeroModal.showModal()"
         >
           <i class="fa-solid fa-pen-to-square"></i>
         </button>
+
+        <button
+          class="btn my-auto btn-sm btn-secondary btn-outline"
+          onclick="showModalSlot.showModal()"
+        >
+        <i class="fa-solid fa-database"></i>
+        </button>
+        </div>
+
+        
       </div>
 
       <p style="text-wrap: balance">{{ hero.equipment }}</p>
@@ -184,20 +195,12 @@ onMounted(async () => {
     </div>
 
     <!--SLOT MODAL-->
-    <div>
-      <button
-        class="btn my-auto border-base-300 h-full"
-        onclick="showModalSlot.showModal()"
-      >
-        <i class="fa-solid fa-ellipsis"></i>
-      </button>
-    </div>
   </div>
 
   <dialog id="showModalSlot" class="modal">
     <form method="dialog" class="modal-box">
       <h3 class="font-bold text-lg">Slots</h3>
-      <p class="py-4">Edit the slots of your hero.<br/><span class="font-mono opacity-50"> {"&lt;name: String>": &lt;quantity: Int>, ...}</span>
+      <p class="py-4">Edit the slots of your hero.<br/><span class="font-mono text-xs opacity-50"> {"&lt;name: String>": &lt;quantity: Int>, ...}</span>
         <br/><span class="text-error text-sm"> {{error}}</span></p>
       <textarea
         class="textarea textarea-bordered w-full"
@@ -218,7 +221,7 @@ onMounted(async () => {
       v-if="items == undefined || items.length == 0"
       class="font-serif text-xl text-center text-secondary"
     >
-      No items found. Add the first down below.
+      No items found. <br/>Add them down below.
     </div>
     <table v-else class="table mx-auto max-w-sm">
       <tbody>
@@ -333,7 +336,7 @@ onMounted(async () => {
 
   <!--ADD NEW ITEM-->
 
-  <div class="max-w-sm mx-auto p-4 sm:px-0">
+  <div class="max-w-sm mx-auto py-4 sm:px-0">
     <div class="join join-vertical">
       <div class="bg-opacity-50 join join-horizontal w-full">
         <input

@@ -45,7 +45,7 @@ watchEffect(async ()=>{
       <table class="table md:text-lg">
         <tbody>
           <tr v-for="(item, index) in heroes">
-            <td class="px-1">
+            <td class="px-1 whitespace-nowrap">
               <div class="flex items-center space-x-3">
                 <div class="avatar">
                   <div class="mask mask-squircle w-10 h-10">
@@ -65,8 +65,8 @@ watchEffect(async ()=>{
               <p class="text-sm">{{ item.equipment }}</p>
             </td>
             <td class="px-1">
-              <button class="btn btn-sm border-base-300" @click="router.push('/h/'+ item.key)" 
-                ><i class="fa-solid fa-pen-to-square"></i
+              <button class="btn btn-sm btn-outline btn-primary" @click="router.push('/h/'+ item.key)" 
+                ><i class="fa-solid fa-eye"></i
               ></button>
             </td>
           </tr>
@@ -78,10 +78,10 @@ watchEffect(async ()=>{
     </div>
     <!--HERO EDIT MENU-->
     <div
-      class="collapse mt-4 bg-opacity-50 bg-base-200 collapse-arrow border border-base-300"
+      class="collapse mt-16 bg-opacity-50 bg-base-200 max-w-md mx-auto collapse-arrow border border-base-300"
     >
       <input type="checkbox" />
-      <div class="collapse-title text-xl font-medium">Add/edit a hero 🦸🦹</div>
+      <div class="collapse-title font-medium">Add/edit a hero <i class="fa-solid fa-user-pen"></i></div>
       <div class="collapse-content space-y-2 max-w-sm mx-auto">
         <HeroEdit :dbHero="dbHero" :heroes="heroes" @fetchHero="fetchHero()"/>
       </div>

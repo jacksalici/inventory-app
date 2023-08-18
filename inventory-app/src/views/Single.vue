@@ -112,23 +112,23 @@ onMounted(async () => {
     </div>
     <div class="w-full">
       <div class="flex w-full justify-between gap-1">
-        <div class="font-bold text-lg mr-auto">
-          {{ hero.name }}
-          <span class="font-mono font-normal text-sm opacity-50">
-            ({{ hero.key }})
-            <div class="text-sm opacity-50">{{ hero.details }}</div>
-          </span>
+        <div class="mr-auto">
+          <h2 class="font-bold text-lg leading-none ">{{ hero.name }} <span class="font-mono font-normal text-sm opacity-50">
+            ({{ hero.key }}) </span></h2>
+          <div class="text-sm opacity-50 my-1">{{ hero.details }}</div>
+          <p style="text-wrap: balance">{{ hero.equipment }}</p>
         </div>
-        <div>
+        
+        <div class="mb-auto ml-auto flex flex-col gap-1">
           <button
-          class="btn my-auto btn-sm btn-secondary btn-outline mr-1"
+          class="btn btn-sm btn-secondary btn-outline"
           onclick="editHeroModal.showModal()"
         >
           <i class="fa-solid fa-pen-to-square"></i>
         </button>
 
         <button
-          class="btn my-auto btn-sm btn-secondary btn-outline"
+          class="btn btn-sm btn-secondary btn-outline"
           onclick="showModalSlot.showModal()"
         >
         <i class="fa-solid fa-database"></i>
@@ -138,7 +138,7 @@ onMounted(async () => {
         
       </div>
 
-      <p style="text-wrap: balance">{{ hero.equipment }}</p>
+      
     </div>
   </div>
 
@@ -163,7 +163,7 @@ onMounted(async () => {
   </dialog>
 
   <!--SLOTS-->
-  <div class="flex mt-5 overflow-x-auto gap-3 items-center">
+  <div class="flex mt-5 overflow-x-auto gap-3 items-center justify-center">
     <div class="join join-vertical" v-for="(value, slot) in slots">
       <div
         class="bg-base-300 btn-sm join-item font-bold text-center align-baseline"
@@ -236,7 +236,7 @@ onMounted(async () => {
               >{{ item.details }}</span
             >
           </td>
-          <td class="px-1">
+          <td class="px-1 whitespace-nowrap">
             <span v-if="!item.used">
               Qty: {{ item.quantity }} <span v-if="!item.quantity">-</span>
               <br />

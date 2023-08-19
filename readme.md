@@ -11,22 +11,22 @@
 
 ## About  
 
-The web app is built using Vue as frontend, and [***Deta* Collections**](https://deta.space/docs/en/use/your-data/collections) for persistent data storage. The *NoSQL* database has 2 tables:
+The web app is built using Vue as frontend, and [***Deta* Collections**](https://deta.space/docs/en/use/your-data/collections) for persistent data storage. The *NoSQL* database has 2 tables (automatically created on the first usage):
 
-- ***HEROES-PARTY_ID***  
+- **HEROES**   
     It contains the info about the characters.
 
     | key (nickname) | name | details |  equipment | slots | avatar |
     |-|-|-|-|-|-|
 
-- ***INVENTORY-PARTY_ID***  
+- **INVENTORY**  
     It contains the info about the characters' equipment.
 
     | key (id) |object | details | quantity | value | used |
     |-|-|-|-|-|-|
 
 
-Since my goal was to create something simple and free both for users and myself, I decided to **not** handle a database for user data, for the sake of costs, privacy, and security. Therefore, if you (or your party) want to use the website, you will need to get a Deta API key and put it in you client side.
+Since my goal was to create something simple and free both for users and myself, I decided to **not** handle a database for user data, for the sake of costs, privacy, and security. Therefore, if you (or your party) want to use the website, you will need to get a Deta API key and put it on your client side.
 
 ### Security concerns
 

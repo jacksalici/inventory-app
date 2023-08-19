@@ -23,10 +23,12 @@ defineProps({
 
 
 
-<div class="card md:card-side mt-2 md:bg-base-100 mx-auto max-w-lg" v-if="extended">
-  <figure class="md:p-5"><img src="/screenshot1.png" class=" hidden md:block" alt="Hero screenshot"/></figure>
+<div class="card md:card-side mt-2 mx-auto " v-if="extended">
+  <figure >
+    <img src="/screenshot3.png" alt="Hero screenshot"/>
+  </figure>
   <div class="card-body">
-    <div class="text-2xl my-auto font-serif md:text-2xl" >The Inventory App is a fast, open-source and 100% free way to track the equipment of your role-playing games characters.  </div>
+    <div class="text-xl my-auto font-serif md:text-xl" >The Inventory App is a fast, open-source and 100% free way to track the equipment of your role-playing games characters.  </div>
 
     
   </div>

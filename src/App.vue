@@ -14,16 +14,14 @@ const parties = ref();
 const party = ref();
 const router = useRouter();
 const route = useRoute();
-
+const tag = ref()
 function changePartyID(id){
   party.value = id
   localStorage.setItem("DETA_PARTY_ID", id)
   
   router.go()
-  
- 
-
 }
+
 
 watchEffect(async () => {
   try {
@@ -36,6 +34,16 @@ watchEffect(async () => {
     dbHero = deta.Base("heroes" + id);
   } catch (e) {
     error.value = "Please check the API key in the menu options.";
+    console.error(e);
+  }
+
+  try{
+    fetch('https://api.github.com/repos/jacksalici/inventory-app/tags').then(res=>{
+      return res.json()
+    }).then(jres=>{
+      tag.value=jres[0]?.name
+    });
+  }catch(e){
     console.error(e);
   }
 });
@@ -77,7 +85,7 @@ onMounted(() => {
             </li>
             <li>
               <router-link to="/about/"
-                ><i class="fa-solid fa-circle-info"></i> About</router-link
+                ><i class="fa-solid fa-circle-info"></i> About & F.A.Q.</router-link
               >
             </li>
             <li>
@@ -105,10 +113,13 @@ onMounted(() => {
     <footer class="footer footer-center mt-3 p-4 bg-base-200 text-base-content">
       <div>
         <p>
-          © 2023 - Developed by <a class="link" href="https://jacksalici.com">jacksalici</a>, illustration by
+          © {{ new Date().getFullYear() }} - The Inventory App. Released under MIT License. 
+          <br/> Developed and designed by <a class="link" href="https://jacksalici.com">Jack Salici</a>, illustration by
           <a class="link" href="https://www.instagram.com/michelegalavotti/"
             >Mich</a
           >.
+          <br/><span class="opacity-50" v-if="tag">{{tag}} - <a class="link" href="https://github.com/jacksalici/inventory-app">GitHub</a></span> 
+         
         </p>
       </div>
     </footer>
